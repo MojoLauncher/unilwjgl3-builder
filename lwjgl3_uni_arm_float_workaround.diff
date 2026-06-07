@@ -1,0 +1,37 @@
+diff --git a/modules/lwjgl/core/src/main/java/org/lwjgl/system/MemoryUtil.java b/modules/lwjgl/core/src/main/java/org/lwjgl/system/MemoryUtil.java
+index 7370e6697f..65dd4e848d 100644
+--- a/modules/lwjgl/core/src/main/java/org/lwjgl/system/MemoryUtil.java
++++ b/modules/lwjgl/core/src/main/java/org/lwjgl/system/MemoryUtil.java
+@@ -96,6 +96,9 @@ public final class MemoryUtil {
+     private static final long PARENT_FLOAT;
+     private static final long PARENT_DOUBLE;
+ 
++    // Float accesses on ARM require 4-byte (or 8-byte) alignment, so we need to make some special considerations for this arch to avoid exploding Java.
++    private static final boolean FLOAT_REQUIRES_ALIGNMENT = "arm".equals(System.getProperty("os.arch"));
++
+     static {
+         Library.initialize();
+ 
+@@ -1906,2 +1909,9 @@ static void memCopyAligned32(int src, int dst, int bytes) {
+-    public static float memGetFloat(long ptr)     { return UNSAFE.getFloat(null, ptr); }
+-    public static double memGetDouble(long ptr)   { return UNSAFE.getDouble(null, ptr); }
++    public static float memGetFloat(long ptr)     { 
++        if(!FLOAT_REQUIRES_ALIGNMENT) return UNSAFE.getFloat(null, ptr);
++        // If an explicitly float access is required, go around and do an unaligned integer access first (which is allowed)
++        else return Float.intBitsToFloat(UNSAFE.getInt(null, ptr));
++    }
++    public static double memGetDouble(long ptr)   { 
++        if(!FLOAT_REQUIRES_ALIGNMENT) return UNSAFE.getDouble(null, ptr);
++        else return Double.longBitsToDouble(UNSAFE.getLong(null, ptr));
++    }
+@@ -1924,2 +1934,8 @@ public static long memGetAddress(long ptr) {
+-    public static void memPutFloat(long ptr, float value)   { UNSAFE.putFloat(null, ptr, value); }
+-    public static void memPutDouble(long ptr, double value) { UNSAFE.putDouble(null, ptr, value); }
++    public static void memPutFloat(long ptr, float value)   {
++        if(!FLOAT_REQUIRES_ALIGNMENT) UNSAFE.putFloat(null, ptr, value);
++        else UNSAFE.putInt(null, ptr, Float.floatToRawIntBits(value));        
++    }
++    public static void memPutDouble(long ptr, double value) {
++        if(!FLOAT_REQUIRES_ALIGNMENT) UNSAFE.putDouble(null, ptr, value);
++        else UNSAFE.putLong(null, ptr, Double.doubleToRawLongBits(value)); 
++    }
