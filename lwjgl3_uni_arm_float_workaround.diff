@@ -12,7 +12,7 @@ index 7370e6697f..65dd4e848d 100644
      static {
          Library.initialize();
  
-@@ -1906,2 +1909,9 @@ static void memCopyAligned32(int src, int dst, int bytes) {
+@@ -1906,3 +1909,10 @@ static void memCopyAligned32(int src, int dst, int bytes) {
 -    public static float memGetFloat(long ptr)     { return UNSAFE.getFloat(null, ptr); }
 -    public static double memGetDouble(long ptr)   { return UNSAFE.getDouble(null, ptr); }
 +    public static float memGetFloat(long ptr)     { 
@@ -24,7 +24,8 @@ index 7370e6697f..65dd4e848d 100644
 +        if(!FLOAT_REQUIRES_ALIGNMENT) return UNSAFE.getDouble(null, ptr);
 +        else return Double.longBitsToDouble(UNSAFE.getLong(null, ptr));
 +    }
-@@ -1924,2 +1934,8 @@ public static long memGetAddress(long ptr) {
+     public static long memGetCLong(long ptr) {
+@@ -1924,3 +1934,9 @@ public static long memGetAddress(long ptr) {
 -    public static void memPutFloat(long ptr, float value)   { UNSAFE.putFloat(null, ptr, value); }
 -    public static void memPutDouble(long ptr, double value) { UNSAFE.putDouble(null, ptr, value); }
 +    public static void memPutFloat(long ptr, float value)   {
@@ -35,3 +36,4 @@ index 7370e6697f..65dd4e848d 100644
 +        if(!FLOAT_REQUIRES_ALIGNMENT) UNSAFE.putDouble(null, ptr, value);
 +        else UNSAFE.putLong(null, ptr, Double.doubleToRawLongBits(value)); 
 +    }
+     public static void memPutCLong(long ptr, long value) {
