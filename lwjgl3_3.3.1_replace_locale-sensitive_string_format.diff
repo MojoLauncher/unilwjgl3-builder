@@ -1,0 +1,126 @@
+diff --git a/modules/lwjgl/core/src/test/java/org/lwjgl/system/libc/StdioTest.java b/modules/lwjgl/core/src/test/java/org/lwjgl/system/libc/StdioTest.java
+index 0992ba1e57..28d1ffd867 100644
+--- a/modules/lwjgl/core/src/test/java/org/lwjgl/system/libc/StdioTest.java
++++ b/modules/lwjgl/core/src/test/java/org/lwjgl/system/libc/StdioTest.java
+@@ -10,6 +10,7 @@
+ import org.testng.annotations.*;
+ 
+ import java.nio.*;
++import java.util.*;
+ 
+ import static org.lwjgl.system.MemoryStack.*;
+ import static org.lwjgl.system.MemoryUtil.*;
+@@ -29,7 +30,7 @@ public void init() {
+     }
+ 
+     public void testScanf() {
+-        String INPUT  = String.format("%s = %d", MESSAGE, ANSWER);
++        String INPUT  = String.format(Locale.US, "%s = %d", MESSAGE, ANSWER);
+         String FORMAT = "%[A-Za-z ]%*[= ]%d";
+ 
+         try (MemoryStack stack = stackPush()) {
+@@ -131,7 +132,7 @@ public void testPrintf() {
+             int chars = rvalue.get(0);
+ 
+             // validate
+-            String expected = String.format(FORMAT, MESSAGE, ANSWER);
++            String expected = String.format(Locale.US, FORMAT, MESSAGE, ANSWER);
+ 
+             assertEquals(chars, expected.length());
+             assertEquals(memUTF8(buffer, chars), expected);
+diff --git a/modules/lwjgl/egl/src/main/java/org/lwjgl/egl/EGL.java b/modules/lwjgl/egl/src/main/java/org/lwjgl/egl/EGL.java
+index 3e48084ad4..9dc36054ab 100644
+--- a/modules/lwjgl/egl/src/main/java/org/lwjgl/egl/EGL.java
++++ b/modules/lwjgl/egl/src/main/java/org/lwjgl/egl/EGL.java
+@@ -242,13 +242,13 @@ private static void addEGLVersions(int MAJOR, int MINOR, Set<String> supportedEx
+             {0, 1, 2, 3, 4, 5} // 10, 11, 12, 13, 14, 15
+         };
+ 
+-        for (int major = 1; major <= min(MAJOR, versions.length); major++) {
+-            for (int minor : versions[major - 1]) {
+-                if (major == MAJOR && MINOR < minor) {
++        for (int M = 1; M <= min(MAJOR, versions.length); M++) {
++            for (int m : versions[M - 1]) {
++                if (M == MAJOR && MINOR < m) {
+                     break;
+                 }
+ 
+-                supportedExtensions.add(String.format("EGL%d%d%s", major, minor, ""));
++                supportedExtensions.add("EGL" + M + m);
+             }
+         }
+     }
+diff --git a/modules/lwjgl/opencl/src/main/java/org/lwjgl/opencl/CL.java b/modules/lwjgl/opencl/src/main/java/org/lwjgl/opencl/CL.java
+index 159d983a82..fe0ce5cd61 100644
+--- a/modules/lwjgl/opencl/src/main/java/org/lwjgl/opencl/CL.java
++++ b/modules/lwjgl/opencl/src/main/java/org/lwjgl/opencl/CL.java
+@@ -329,13 +329,13 @@ static void addCLVersions(int MAJOR, int MINOR, Set<String> supportedExtensions)
+     }
+ 
+     private static void addCLVersions(int MAJOR, int MINOR, Set<String> supportedExtensions, String postfix, int[][] versions) {
+-        for (int major = 1; major <= min(MAJOR, versions.length); major++) {
+-            for (int minor : versions[major - 1]) {
+-                if (major == MAJOR && MINOR < minor) {
++        for (int M = 1; M <= min(MAJOR, versions.length); M++) {
++            for (int m : versions[M - 1]) {
++                if (M == MAJOR && MINOR < m) {
+                     break;
+                 }
+ 
+-                supportedExtensions.add(String.format("OpenCL%d%d%s", major, minor, postfix));
++                supportedExtensions.add("OpenCL" + M + m + postfix);
+             }
+         }
+     }
+diff --git a/modules/lwjgl/opengl/src/main/java/org/lwjgl/opengl/GL.java b/modules/lwjgl/opengl/src/main/java/org/lwjgl/opengl/GL.java
+index 35818d31bf..dcb7868bfe 100644
+--- a/modules/lwjgl/opengl/src/main/java/org/lwjgl/opengl/GL.java
++++ b/modules/lwjgl/opengl/src/main/java/org/lwjgl/opengl/GL.java
+@@ -419,7 +419,7 @@ public static GLCapabilities createCapabilities(boolean forwardCompatible, @Null
+             }
+ 
+             for (int m = M == 1 ? 1 : 0; m <= maxMinor; m++) {
+-                supportedExtensions.add(String.format("OpenGL%d%d", M, m));
++                supportedExtensions.add("OpenGL" + M + m);
+             }
+         }
+ 
+diff --git a/modules/lwjgl/opengles/src/main/java/org/lwjgl/opengles/GLES.java b/modules/lwjgl/opengles/src/main/java/org/lwjgl/opengles/GLES.java
+index 0f5899ad13..a2d6afa481 100644
+--- a/modules/lwjgl/opengles/src/main/java/org/lwjgl/opengles/GLES.java
++++ b/modules/lwjgl/opengles/src/main/java/org/lwjgl/opengles/GLES.java
+@@ -327,7 +327,7 @@ public static GLESCapabilities createCapabilities(@Nullable IntFunction<PointerB
+             }
+ 
+             for (int m = 0; m <= maxMinor; m++) {
+-                supportedExtensions.add(String.format("GLES%d%d", M, m));
++                supportedExtensions.add("GLES" + M + m);
+             }
+         }
+ 
+diff --git a/modules/lwjgl/openxr/src/main/java/org/lwjgl/openxr/XR.java b/modules/lwjgl/openxr/src/main/java/org/lwjgl/openxr/XR.java
+index ef71f235fa..6cb9fe6e95 100644
+--- a/modules/lwjgl/openxr/src/main/java/org/lwjgl/openxr/XR.java
++++ b/modules/lwjgl/openxr/src/main/java/org/lwjgl/openxr/XR.java
+@@ -163,7 +163,7 @@ static Set<String> getEnabledExtensionSet(long apiVersion, @Nullable PointerBuff
+                 maxMinor = min(minorVersion, maxMinor);
+             }
+             for (int m = 0; m <= maxMinor; m++) {
+-                enabledExtensions.add(String.format("OpenXR%d%d", M, m));
++                enabledExtensions.add("OpenXR" + M + m);
+             }
+         }
+ 
+diff --git a/modules/lwjgl/vulkan/src/main/java/org/lwjgl/vulkan/VK.java b/modules/lwjgl/vulkan/src/main/java/org/lwjgl/vulkan/VK.java
+index 4d7c53767d..2f809704aa 100644
+--- a/modules/lwjgl/vulkan/src/main/java/org/lwjgl/vulkan/VK.java
++++ b/modules/lwjgl/vulkan/src/main/java/org/lwjgl/vulkan/VK.java
+@@ -204,7 +204,7 @@ static Set<String> getEnabledExtensionSet(int apiVersion, @Nullable PointerBuffe
+                 maxMinor = min(minorVersion, maxMinor);
+             }
+             for (int m = 0; m <= maxMinor; m++) {
+-                enabledExtensions.add(String.format("Vulkan%d%d", M, m));
++                enabledExtensions.add("Vulkan" + M + m);
+             }
+         }
+ 

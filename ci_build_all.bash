@@ -62,6 +62,7 @@ fi
 
 if [[ "$LWJGL_VERSION" == "3.2.3" || "$LWJGL_VERSION" == "3.3.1" ]]; then
    apply_patch lwjgl3_3.2.3_use_packaging_arch "fix offline build natives arch"
+   apply_patch lwjgl3_3.3.1_replace_locale-sensitive_string_format "fix crash on arabic locale by replacing locale-sensitive String.format"
 fi
 
 if [[ "$LWJGL_VERSION" == "3.2.3" ]]; then
