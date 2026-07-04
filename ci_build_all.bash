@@ -58,16 +58,16 @@ fi
 if [[ "$LWJGL_VERSION" == "3.3.1" ]]; then
    apply_patch lwjgl3_3.3.1_xxhash_static_assert "fix static assert macro in xxHash"
    apply_patch lwjgl3_3.3.1_uring_type "add missing type into ui_uring.h"
-   apply_patch lwjgl3_3.3.1_replace_locale-sensitive_string_format "fix crash on arabic locale by replacing locale-sensitive String.format"
+   apply_patch lwjgl3_3.3.1_replace_locale-sensitive_string_format "[3.3.1] fix crash on arabic locale by replacing locale-sensitive String.format"
 fi
 
 if [[ "$LWJGL_VERSION" == "3.2.3" || "$LWJGL_VERSION" == "3.3.1" ]]; then
    apply_patch lwjgl3_3.2.3_use_packaging_arch "fix offline build natives arch"
-   apply_patch lwjgl3_3.2.3_replace_locale-sensitive_string_format "fix crash on arabic locale by replacing locale-sensitive String.format"
 fi
 
 if [[ "$LWJGL_VERSION" == "3.2.3" ]]; then
    apply_patch lwjgl3_3.2.3_rpmalloc_madvise "use linux madvise instead of posix_madvise when available"
+   apply_patch lwjgl3_3.2.3_replace_locale-sensitive_string_format "[3.2.3] fix crash on arabic locale by replacing locale-sensitive String.format"
 fi
 
 export ANTFLAGS="-lib $NASHORN -Dplatform.linux=true -Dbinding.nfd=false -Dbinding.jawt=false -Dbinding.remotery=false -Dbinding.zstd=false -Dbinding.yoga=false -Dbinding.meow=false"
