@@ -1,0 +1,137 @@
+Index: modules/lwjgl/opengles/src/main/java/org/lwjgl/opengles/GLES.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/modules/lwjgl/opengles/src/main/java/org/lwjgl/opengles/GLES.java b/modules/lwjgl/opengles/src/main/java/org/lwjgl/opengles/GLES.java
+--- a/modules/lwjgl/opengles/src/main/java/org/lwjgl/opengles/GLES.java	(revision e41032b23adb2d494e2c492777e99e5d9697a860)
++++ b/modules/lwjgl/opengles/src/main/java/org/lwjgl/opengles/GLES.java	(date 1783200603205)
+@@ -282,7 +282,7 @@
+                 }
+ 
+                 for (int m = 0; m <= maxMinor; m++) {
+-                    supportedExtensions.add(String.format("GLES%d%d", M, m));
++                    supportedExtensions.add("GLES" + M + m);
+                 }
+             }
+ 
+Index: modules/lwjgl/opencl/src/main/java/org/lwjgl/opencl/CL.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/modules/lwjgl/opencl/src/main/java/org/lwjgl/opencl/CL.java b/modules/lwjgl/opencl/src/main/java/org/lwjgl/opencl/CL.java
+--- a/modules/lwjgl/opencl/src/main/java/org/lwjgl/opencl/CL.java	(revision e41032b23adb2d494e2c492777e99e5d9697a860)
++++ b/modules/lwjgl/opencl/src/main/java/org/lwjgl/opencl/CL.java	(date 1783200432476)
+@@ -319,13 +319,13 @@
+     }
+ 
+     private static void addCLVersions(int MAJOR, int MINOR, Set<String> supportedExtensions, String postfix, int[][] versions) {
+-        for (int major = 1; major <= min(MAJOR, versions.length); major++) {
+-            for (int minor : versions[major - 1]) {
+-                if (major == MAJOR && MINOR < minor) {
++        for (int M = 1; M <= min(MAJOR, versions.length); M++) {
++            for (int m : versions[M - 1]) {
++                if (M == MAJOR && MINOR < m) {
+                     break;
+                 }
+ 
+-                supportedExtensions.add(String.format("OpenCL%d%d%s", major, minor, postfix));
++                supportedExtensions.add("OpenCL"+ M + m + postfix);
+             }
+         }
+     }
+Index: modules/lwjgl/opengl/src/main/java/org/lwjgl/opengl/GL.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/modules/lwjgl/opengl/src/main/java/org/lwjgl/opengl/GL.java b/modules/lwjgl/opengl/src/main/java/org/lwjgl/opengl/GL.java
+--- a/modules/lwjgl/opengl/src/main/java/org/lwjgl/opengl/GL.java	(revision e41032b23adb2d494e2c492777e99e5d9697a860)
++++ b/modules/lwjgl/opengl/src/main/java/org/lwjgl/opengl/GL.java	(date 1783200484985)
+@@ -412,7 +412,7 @@
+                 }
+ 
+                 for (int m = M == 1 ? 1 : 0; m <= maxMinor; m++) {
+-                    supportedExtensions.add(String.format("OpenGL%d%d", M, m));
++                    supportedExtensions.add("OpenGL" + M + m);
+                 }
+             }
+ 
+Index: modules/lwjgl/egl/src/main/java/org/lwjgl/egl/EGL.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/modules/lwjgl/egl/src/main/java/org/lwjgl/egl/EGL.java b/modules/lwjgl/egl/src/main/java/org/lwjgl/egl/EGL.java
+--- a/modules/lwjgl/egl/src/main/java/org/lwjgl/egl/EGL.java	(revision e41032b23adb2d494e2c492777e99e5d9697a860)
++++ b/modules/lwjgl/egl/src/main/java/org/lwjgl/egl/EGL.java	(date 1783200332019)
+@@ -236,13 +236,13 @@
+             {0, 1, 2, 3, 4, 5} // 10, 11, 12, 13, 14, 15
+         };
+ 
+-        for (int major = 1; major <= min(MAJOR, versions.length); major++) {
+-            for (int minor : versions[major - 1]) {
+-                if (major == MAJOR && MINOR < minor) {
++        for (int M = 1; M <= min(MAJOR, versions.length); M++) {
++            for (int m : versions[M - 1]) {
++                if (M == MAJOR && MINOR < m) {
+                     break;
+                 }
+ 
+-                supportedExtensions.add(String.format("EGL%d%d%s", major, minor, ""));
++                supportedExtensions.add("EGL" + M + m);
+             }
+         }
+     }
+Index: modules/lwjgl/vulkan/src/main/java/org/lwjgl/vulkan/VK.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/modules/lwjgl/vulkan/src/main/java/org/lwjgl/vulkan/VK.java b/modules/lwjgl/vulkan/src/main/java/org/lwjgl/vulkan/VK.java
+--- a/modules/lwjgl/vulkan/src/main/java/org/lwjgl/vulkan/VK.java	(revision e41032b23adb2d494e2c492777e99e5d9697a860)
++++ b/modules/lwjgl/vulkan/src/main/java/org/lwjgl/vulkan/VK.java	(date 1783200603223)
+@@ -205,7 +205,7 @@
+                 maxMinor = min(minorVersion, maxMinor);
+             }
+             for (int m = 0; m <= maxMinor; m++) {
+-                enabledExtensions.add(String.format("Vulkan%d%d", M, m));
++                enabledExtensions.add("Vulkan" + M + m);
+             }
+         }
+ 
+Index: modules/lwjgl/core/src/test/java/org/lwjgl/system/libc/StdioTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/modules/lwjgl/core/src/test/java/org/lwjgl/system/libc/StdioTest.java b/modules/lwjgl/core/src/test/java/org/lwjgl/system/libc/StdioTest.java
+--- a/modules/lwjgl/core/src/test/java/org/lwjgl/system/libc/StdioTest.java	(revision e41032b23adb2d494e2c492777e99e5d9697a860)
++++ b/modules/lwjgl/core/src/test/java/org/lwjgl/system/libc/StdioTest.java	(date 1783200117365)
+@@ -8,6 +8,7 @@
+ import org.testng.annotations.*;
+ 
+ import java.nio.*;
++import java.util.*;
+ 
+ import static org.lwjgl.system.MemoryStack.*;
+ import static org.lwjgl.system.MemoryUtil.*;
+@@ -27,7 +28,7 @@
+     }
+ 
+     public void testScanf() {
+-        String INPUT  = String.format("%s = %d", MESSAGE, ANSWER);
++        String INPUT  = String.format(Locale.US, "%s = %d", MESSAGE, ANSWER);
+         String FORMAT = "%[A-Za-z ]%*[= ]%d";
+ 
+         long vm = dcNewCallVM(1024);
+@@ -80,7 +81,7 @@
+ 
+             int chars = dcCallInt(vm, LibCStdio.snprintf);
+ 
+-            String expected = String.format(FORMAT, MESSAGE, ANSWER);
++            String expected = String.format(Locale.US, FORMAT, MESSAGE, ANSWER);
+ 
+             assertEquals(chars, expected.length());
+             assertEquals(memUTF8(buffer, chars), expected);
