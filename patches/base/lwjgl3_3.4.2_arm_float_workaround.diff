@@ -33,7 +33,7 @@ index 2281bfd..0ecbaac 100644
      public static void memPutFloatUnaligned(long ptr, float value)   { BACKEND.putFloatUnaligned(ptr, value); }
  
 -    public static void memPutDouble(long ptr, double value)          { BACKEND.putDouble(ptr, value); }
-+    public static void memPutDouble(long ptr, double value)          { if(FLOAT_REQUIRES_ALIGNMENT) BACKEND.putLong(ptr, Double.doubleToRawLongBits(value)); else BACKEND.putDouble(ptr, value) }
++    public static void memPutDouble(long ptr, double value)          { if(FLOAT_REQUIRES_ALIGNMENT) BACKEND.putLong(ptr, Double.doubleToRawLongBits(value)); else BACKEND.putDouble(ptr, value); }
      public static void memPutDoubleUnaligned(long ptr, double value) { BACKEND.putDoubleUnaligned(ptr, value); }
  
      public static void memPutCLong(long ptr, long value)             { BACKEND.putCLong(ptr, value); }
