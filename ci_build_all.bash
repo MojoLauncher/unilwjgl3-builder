@@ -56,7 +56,7 @@ if [ -f "./modules/lwjgl/core/src/templates/kotlin/core/linux/templates/uio.kt" 
    apply_patch ../patches/manual/lwjgl3_droid_syscall.diff
 fi
 
-export ANTFLAGS="-lib $NASHORN -Dplatform.linux=true -Dbinding.nfd=false -Dbinding.jawt=false -Dbinding.remotery=false -Dbinding.zstd=false -Dbinding.yoga=false -Dbinding.meow=false -Dbinding.rpmalloc=false"
+export ANTFLAGS="-lib $NASHORN -Dplatform.linux=true -Dbinding.nfd=false -Dbinding.jawt=false -Dbinding.remotery=false -Dbinding.yoga=false -Dbinding.meow=false -Dbinding.rpmalloc=false"
 
 ant $ANTFLAGS compile-templates compile
 
