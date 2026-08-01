@@ -1,0 +1,22 @@
+diff --git a/modules/lwjgl/zstd/src/main/c/dictBuilder/cover.c b/modules/lwjgl/zstd/src/main/c/dictBuilder/cover.c
+index 2ef33c7..5a4c27f 100644
+--- a/modules/lwjgl/zstd/src/main/c/dictBuilder/cover.c
++++ b/modules/lwjgl/zstd/src/main/c/dictBuilder/cover.c
+@@ -241,7 +241,7 @@ typedef struct {
+   unsigned d;
+ } COVER_ctx_t;
+ 
+-#if !defined(_GNU_SOURCE) && !defined(__APPLE__) && !defined(_MSC_VER)
++#if defined(__ANDROID__) || !defined(_GNU_SOURCE) && !defined(__APPLE__) && !defined(_MSC_VER)
+ /* C90 only offers qsort() that needs a global context. */
+ static COVER_ctx_t *g_coverCtx = NULL;
+ #endif
+@@ -328,7 +328,7 @@ static void stableSort(COVER_ctx_t *ctx) {
+     qsort_r(ctx->suffix, ctx->suffixSize, sizeof(U32),
+             ctx,
+             (ctx->d <= 8 ? &COVER_strict_cmp8 : &COVER_strict_cmp));
+-#elif defined(_GNU_SOURCE)
++#elif defined(_GNU_SOURCE) && !defined(__ANDROID__)
+     qsort_r(ctx->suffix, ctx->suffixSize, sizeof(U32),
+             (ctx->d <= 8 ? &COVER_strict_cmp8 : &COVER_strict_cmp),
+             ctx);
