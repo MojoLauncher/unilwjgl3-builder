@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+#set -e
 
 if [ -z "$LWJGL_VERSION" ]; then
    echo "LWJGL version not set"
@@ -62,9 +62,11 @@ ant $ANTFLAGS compile-templates compile
 
 mkdir debuginfo
 
-LWJGL_BUILD_ARCH=arm64 bash ../ci_build_android.bash
-LWJGL_BUILD_ARCH=arm32 bash ../ci_build_android.bash
-LWJGL_BUILD_ARCH=x86 bash ../ci_build_android.bash
-LWJGL_BUILD_ARCH=x64 bash ../ci_build_android.bash
+for arch in 'arm64' 'arm32' 'x86' 'x64'; do
+	if [[ ! -f ../patches/$LWJGL_VERSION/"$arch"_block ]]; then
+		LWJGL_BUILD_ARCH=$arch bash ../ci_build_android.bash
+	else echo "Arch $arch is disabled!"
+	fi
+done
 
 yes | ant $ANTFLAGS -Dbuild.offline=true release
