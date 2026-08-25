@@ -40,7 +40,7 @@ jobs:
       run: |
         export JAVA8_HOME=$JAVA_HOME_8_${{runner.arch}}
         export LWJGL_VERSION=${{matrix.version}}
-        export LIBFFI_VERSION=3.7.0
+        export LIBFFI_VERSION=3.8.0
         bash ci_build_all.bash
 
     - name: Upload modules release output
