@@ -58,6 +58,14 @@ fi
 
 export ANTFLAGS="-lib $NASHORN -Dplatform.linux=true -Dbinding.nfd=false -Dbinding.jawt=false -Dbinding.remotery=false -Dbinding.yoga=false -Dbinding.meow=false -Dbinding.rpmalloc=false"
 
+if [ -d "../patches/$LWJGL_VERSION/disable" ]; then
+	for d in ../patches/$LWJGL_VERSION/disable/*; do
+		binding=$(basename $d)
+		echo "Disabling $binding binding"
+		export ANTFLAGS="$ANTFLAGS -Dbinding.$binding=false"
+	done
+fi
+
 ant $ANTFLAGS compile-templates compile
 
 mkdir debuginfo
