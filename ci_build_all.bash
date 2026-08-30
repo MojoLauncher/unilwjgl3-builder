@@ -64,6 +64,7 @@ ant $ANTFLAGS compile-templates compile
 mkdir debuginfo
 
 for arch in 'arm64' 'arm32' 'x86' 'x64'; do
+	export ANTNATIVEFLAGS=$ANTFLAGS
 	if [ -d "../patches/$LWJGL_VERSION/$arch/disable" ]; then
 		for d in ../patches/$LWJGL_VERSION/$arch/disable/*; do
 			binding=$(basename $d)
@@ -75,7 +76,6 @@ for arch in 'arm64' 'arm32' 'x86' 'x64'; do
 		LWJGL_BUILD_ARCH=$arch bash ../ci_build_android.bash
 	else echo "Arch $arch is disabled!"
 	fi
-	export ANTNATIVEFLAGS=$ANTFLAGS
 done
 
 yes | ant $ANTFLAGS -Dbuild.offline=true release
