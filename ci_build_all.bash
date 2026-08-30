@@ -56,24 +56,26 @@ if [ -f "./modules/lwjgl/core/src/templates/kotlin/core/linux/templates/uio.kt" 
    apply_patch ../patches/manual/lwjgl3_droid_syscall.diff
 fi
 
+# Build common jars
+export ANTFLAGS="-lib $NASHORN -Dplatform.linux=true -Dbinding.nfd=false -Dbinding.jawt=false -Dbinding.remotery=false -Dbinding.yoga=false -Dbinding.meow=false -Dbinding.rpmalloc=false"
+ant $ANTFLAGS compile-templates compile
 
 
 mkdir debuginfo
 
 for arch in 'arm64' 'arm32' 'x86' 'x64'; do
-	export ANTFLAGS="-lib $NASHORN -Dplatform.linux=true -Dbinding.nfd=false -Dbinding.jawt=false -Dbinding.remotery=false -Dbinding.yoga=false -Dbinding.meow=false -Dbinding.rpmalloc=false"
 	if [ -d "../patches/$LWJGL_VERSION/$arch/disable" ]; then
 		for d in ../patches/$LWJGL_VERSION/$arch/disable/*; do
 			binding=$(basename $d)
 			echo "Disabling $binding binding"
-			export ANTFLAGS="$ANTFLAGS -Dbinding.$binding=false"
+			export ANTNATIVEFLAGS="$ANTNATIVEFLAGS -Dbinding.$binding=false"
 		done
 	fi
-	ant $ANTFLAGS compile-templates compile
 	if [[ ! -f ../patches/$LWJGL_VERSION/"$arch"_block ]]; then
 		LWJGL_BUILD_ARCH=$arch bash ../ci_build_android.bash
 	else echo "Arch $arch is disabled!"
 	fi
+	export ANTNATIVEFLAGS=$ANTFLAGS
 done
 
 yes | ant $ANTFLAGS -Dbuild.offline=true release
