@@ -16,9 +16,9 @@ export TOOLCHAIN_PATH=/tmp/toolchain-$TOOLCHAIN
 mkdir $TOOLCHAIN_PATH
 pushd $TOOLCHAIN_PATH
 
-wget -nc -nv https://github.com/MojoLauncher/gcc-toolchain/releases/download/prebuilt/gcc-13-$TOOLCHAIN-21.tar.xz
-tar xf gcc-13-$TOOLCHAIN-21.tar.xz
-rm gcc-13-$TOOLCHAIN-21.tar.xz
+wget -nc -nv https://github.com/MojoLauncher/gcc-toolchain/releases/download/prebuilt-gcc16/gcc-$TOOLCHAIN-21.tar.xz
+tar xf gcc-$TOOLCHAIN-21.tar.xz
+rm gcc-$TOOLCHAIN-21.tar.xz
 
 rm sysroot/usr/lib/libstdc++.a
 rm sysroot/usr/lib/libstdc++.so
